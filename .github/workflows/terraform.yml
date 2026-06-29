@@ -1,4 +1,4 @@
-name: Terraform AWS Deploy
+name: Terraform AWS Destroy
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   terraform:
-    name: Terraform Infrastructure
+    name: Destroy Infrastructure
     runs-on: ubuntu-latest
 
     env:
@@ -30,26 +30,12 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      # Uncomment if you want to check formatting
-      # - name: Terraform Format Check
-      #   run: terraform fmt -check
-
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        run: terraform plan -input=false
+      - name: Terraform Plan Destroy
+        run: terraform plan -destroy -input=false
 
-      ####################################################
-       # APPLY (Default)
-      ####################################################
-      - name: Terraform Apply
+      - name: Terraform Destroy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-
-      ####################################################
-      # DESTROY (Uncomment when needed)
-      ####################################################
-       - name: Terraform Destroy
-         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-         run: terraform destroy -auto-approve -input=false
+        run: terraform destroy -auto-approve -input=false
