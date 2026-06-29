@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
   pull_request:
 
 permissions:
@@ -12,7 +11,7 @@ permissions:
 
 jobs:
   terraform:
-    name: Deploy Infrastructure
+    name: Terraform Infrastructure
     runs-on: ubuntu-latest
 
     env:
@@ -20,8 +19,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
       TF_VAR_key_name: ${{ secrets.TF_VAR_key_name }}
-    steps:
 
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -31,8 +30,9 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      #- name: Terraform Format Check
-      # run: terraform fmt -check
+      # Uncomment if you want to check formatting
+      # - name: Terraform Format Check
+      #   run: terraform fmt -check
 
       - name: Terraform Validate
         run: terraform validate
@@ -40,6 +40,16 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false
 
+      ####################################################
+      # APPLY (Default)
+      ####################################################
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+
+      ####################################################
+      # DESTROY (Uncomment when needed)
+      ####################################################
+      # - name: Terraform Destroy
+      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      #   run: terraform destroy -auto-approve -input=false
