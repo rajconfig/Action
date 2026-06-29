@@ -53,7 +53,10 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  deploy:
+    env:
+       AWS_ACCESS_KEY_ID: "${{ secret.AWS_ACCESS_KEY_ID}}"
+       AWS_SECRET_ACCESS_KEY: "${{ secret.AWS_SECRET_ACCESS_KEY}}"
     name: 'Terraform'
     runs-on: ubuntu-latest
     environment: production
