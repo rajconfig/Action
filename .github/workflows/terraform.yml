@@ -1,4 +1,4 @@
-name: Terraform AWS Destroy
+name: Terraform AWS Deploy
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   terraform:
-    name: Destroy Infrastructure
+    name: Deploy Infrastructure
     runs-on: ubuntu-latest
 
     env:
@@ -33,9 +33,9 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan Destroy
-        run: terraform plan -destroy -input=false
+      - name: Terraform Plan
+        run: terraform plan -input=false
 
-      - name: Terraform Destroy
+      - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform destroy -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false
